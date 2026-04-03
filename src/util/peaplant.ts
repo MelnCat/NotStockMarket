@@ -1,10 +1,6 @@
 import { groupBy } from "remeda";
 import { combineResults } from "./gene";
-
-export interface ResultProbability<T extends string> {
-	result: T;
-	probability: number;
-}
+import { ResultProbability } from "./probability";
 
 interface PeaGene {
 	size: ["N" | "M", "N" | "M"];

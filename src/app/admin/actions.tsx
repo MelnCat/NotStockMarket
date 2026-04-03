@@ -42,11 +42,11 @@ const processFileAction =
 						.join("\n")}`,
 				};
 			const unwrapped = processed.map(x => unwrap(x));
-			return await cb(unwrapped);
+			const result = await cb(unwrapped);
+			if (result.success) revalidatePath("/api/items");
+			return result;
 		} catch (e) {
 			return { success: false, message: String(e) };
-		} finally {
-			revalidatePath("/api/items");
 		}
 	};
 
@@ -305,7 +305,6 @@ export const processDeletedItemFile = async (data: FormData | Uint8Array[]) =>
 export const processChestDatabaseFiles = processFileAction(parseChestDatabasePage, async data => {
 	let updated = 0;
 	for (const entry of data.flat()) {
-        console.log("trying", entry.pools)
 		await prisma.chestEntry.upsert({
 			create: {
 				id: entry.id,

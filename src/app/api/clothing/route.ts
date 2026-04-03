@@ -3,6 +3,10 @@ import { getClothing } from "@/db/db";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-	const data = await getClothing();
-	return Response.json(data);
+	try {
+		const data = await getClothing();
+		return Response.json(data);
+	} catch {
+		return Response.json({ error: "Failed to fetch clothing" }, { status: 500 });
+	}
 }

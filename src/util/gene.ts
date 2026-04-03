@@ -1,10 +1,6 @@
 import { groupBy } from "remeda";
 import { accents, CatAppearance, catPatterns, densityFromColor, dilutionFromColor, geneFromColor, getGenePhenotype, PartialCatGene, possibleGenes, whiteTypes } from "./cat";
-
-export interface ResultProbability<T extends string> {
-	result: T;
-	probability: number;
-}
+import { ResultProbability } from "./probability";
 
 export const combineResults = <T extends string>(results: readonly ResultProbability<T>[]) => {
 	const total = results.map(x => x.probability).reduce((l, c) => l + c, 0);
