@@ -36,7 +36,7 @@ console.log(JSON.stringify(customMissing.map(x => x.key)));
 console.log(JSON.stringify(customMissing.map(x => x.id)));
 const links = [
 	...cMissing.map(x => `https://www.pixelcatsend.com/images/clothing/c/${x.key}.png`),
-	...mMissing.map(x => `https://www.pixelcatsend.com/images/clothing/c/${x.key}.png`),
+	...mMissing.map(x => `https://www.pixelcatsend.com/images/clothing/m/${x.key}.png`),
 	...customMissing.map(x => x.image),
 ];
 
