@@ -16,36 +16,45 @@ const usePaste = (cb: (html: string) => void | Promise<void>) => {
 			cb(event.clipboardData!.getData("text/html"));
 		} catch {}
 	});
-	useEventListener("focus", async event => {
+	/*useEventListener("focus", async event => {
 		try {
 			cb(await (await (await navigator.clipboard.read())[0].getType("text/html")).text());
 		} catch {}
-	});
+	});*/
 };
 const useElementPaste = (element: RefObject<HTMLElement>, cb: (html: string) => void | Promise<void>) => {
-	useEventListener("paste", event => {
-		try {
-			cb(event.clipboardData!.getData("text/html"));
-		} catch {}
-	}, element);
+	useEventListener(
+		"paste",
+		event => {
+			try {
+				cb(event.clipboardData!.getData("text/html"));
+			} catch {}
+		},
+		element,
+	);
 };
 
 const Title = ({ setCat }: { setCat: (cat: RawCat) => void }) => {
 	const [error, setError] = useState("");
-	usePaste(str => {
+	const cb = (str: string) => {
 		if (!str) return;
 		const parsedCat = parseCatPage(str);
 		if (parsedCat.message !== undefined) setError(parsedCat.message);
 		else setCat(parsedCat.data);
-	});
+	};
+	usePaste(cb);
 	return (
 		<>
 			<h1 className={styles.title}>
 				<img src="/img/services/gato.png" alt="GATO" />
 			</h1>
 			<p>Paste a cat to begin.</p>
-			<input value="" onChange={() => {}} />
+			<input value="" onChange={() => {}} onPaste={e => cb(e.clipboardData?.getData("text/html"))} />
 			<p className={styles.error}>{error}</p>
+			<h2>How to Use</h2>
+			<p>Step 1: Go to the cat page and press Ctrl+A and Ctrl+C</p>
+			<p>Step 2: Come back to this page and press Ctrl+V</p>
+			<p>Step 3: Ctrl+A and Ctrl+C on sandbox page trials and paste it into here.</p>
 		</>
 	);
 };
@@ -113,11 +122,11 @@ const generateBBCode = (gene: PartialCatGene, oldStyle = true) => {
 					brackets(
 						`${optionalBrackets(pattern, !oldStyle && gene.unknownOrder?.pattern)}${optionalBrackets(
 							spotting,
-							!oldStyle && gene.unknownOrder?.spotting
-						)}`
+							!oldStyle && gene.unknownOrder?.spotting,
+						)}`,
 					),
-					patternColors
-			  );
+					patternColors,
+				);
 	const white = replaceColors(optionalBrackets(gene.white.join(""), !oldStyle && gene.unknownOrder?.white), YN);
 	const whiteNumber = gene.whiteNumber === 0 || gene.whiteNumber === "?" ? "0" : gene.whiteNumber; /*`[color=${
 					{
@@ -161,13 +170,13 @@ const GeneDashboard = ({ cat }: { cat: RawCat }) => {
 		() =>
 			calculateUnknownGenes(
 				gene,
-				tests.map(x => ({ result: x.result, tester: testerGenes[x.parents.find(y => y !== cat.id) as keyof typeof testerGenes] }))
+				tests.map(x => ({ result: x.result, tester: testerGenes[x.parents.find(y => y !== cat.id) as keyof typeof testerGenes] })),
 			),
-		[gene, tests, cat]
+		[gene, tests, cat],
 	);
 	const getOrCertain = useMemo(
-		() => (key: keyof typeof matched & keyof typeof gene) => matched[key] ? sortMap(matched[key]) : certain(gene[key]),
-		[gene, matched]
+		() => (key: keyof typeof matched & keyof typeof gene) => (matched[key] ? sortMap(matched[key]) : certain(gene[key])),
+		[gene, matched],
 	);
 	const probableGene = useMemo(
 		() => ({
@@ -183,7 +192,7 @@ const GeneDashboard = ({ cat }: { cat: RawCat }) => {
 			whiteType: getOrCertain("whiteType"),
 			accent: getOrCertain("accent"),
 		}),
-		[matched, gene, getOrCertain]
+		[matched, gene, getOrCertain],
 	);
 	const outputGene = useMemo(
 		() =>
@@ -212,11 +221,11 @@ const GeneDashboard = ({ cat }: { cat: RawCat }) => {
 					accent: gene.unknownOrder?.accent && probableGene.accent[0].result[0] !== probableGene.accent[0].result[1],
 					growth: gene.unknownOrder?.growth,
 				},
-			} satisfies PartialCatGene),
-		[probableGene, gene]
+			}) satisfies PartialCatGene,
+		[probableGene, gene],
 	);
 	const [seen, setSeen] = useState<string[]>([]);
-	usePaste(data => {
+	const cb = (data: string) => {
 		if (!data) return;
 		if (seen.includes(data)) return;
 		const sandbox = parseBeanSandboxPage(data);
@@ -224,7 +233,8 @@ const GeneDashboard = ({ cat }: { cat: RawCat }) => {
 		if (!sandbox.data.parents.includes(cat.id)) return;
 		setSeen(seen.concat(data));
 		setTests(tests.concat(sandbox.data.results.map(x => ({ result: x, parents: sandbox.data.parents }))));
-	});
+	};
+	usePaste(cb);
 	useExtData(event => {
 		if (!event.detail.url.includes("sandbox/beans")) return;
 		const data = new TextDecoder().decode(event.detail.data);
@@ -252,12 +262,12 @@ const GeneDashboard = ({ cat }: { cat: RawCat }) => {
 								v[0].probability < 0.6
 									? "#f8131344"
 									: v[0].probability < 0.9
-									? "#ffff0033"
-									: v[0].probability < 0.95
-									? "#1bc91b55"
-									: v[0].probability === 1
-									? "#36f1369d"
-									: "#0cdd0c88",
+										? "#ffff0033"
+										: v[0].probability < 0.95
+											? "#1bc91b55"
+											: v[0].probability === 1
+												? "#36f1369d"
+												: "#0cdd0c88",
 						}}
 					>
 						<div className={styles.geneValue}>{v[0].result}</div>
@@ -267,7 +277,10 @@ const GeneDashboard = ({ cat }: { cat: RawCat }) => {
 			</section>
 			<article>
 				<p>Paste a sandbox trial to gene.</p>
-				<input defaultValue="" />
+				<input defaultValue="" onPaste={e => {
+                    cb(e.clipboardData?.getData("text/html"));
+                    (e.target as HTMLInputElement).value = "";
+                }} />
 				<h1>Sandbox Inputs:</h1>
 				<div className={styles.sandboxInputs}>
 					<input value={cat.wind === "South" ? 572 : cat.id} readOnly />

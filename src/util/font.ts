@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Inter, Gantari } from "next/font/google";
 import localFont from "next/font/local";
 
 export const defaultFont = localFont({
@@ -14,7 +14,14 @@ export const defaultFont = localFont({
 		{
 			path: "../assets/font/PixeloidMono.ttf",
 			weight: "400",
-            style: "italic"
+			style: "italic",
 		},
 	],
 });
+
+export const sansSerifFont = Gantari();
+
+export const fonts = {
+	pixel: { font: defaultFont, name: "Pixel" },
+	sansSerif: { font: sansSerifFont, name: "Sans-Serif" },
+};

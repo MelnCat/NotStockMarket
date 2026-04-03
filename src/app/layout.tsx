@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import "./globals.scss";
 import styles from "./layout.module.scss";
 
-import { defaultFont } from "@/util/font";
+import { defaultFont, fonts, sansSerifFont } from "@/util/font";
 import Link from "next/link";
+import { useLocalStorage } from "usehooks-ts";
+import { cookies } from "next/headers";
+import { FontSwitcher } from "@/components/FontSwitcher";
 
 export const dynamic = "force-dynamic";
 
@@ -12,14 +15,16 @@ export const metadata: Metadata = {
 	description: "todo come up with descriptoin",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const cookieStore = await cookies();
+	const font = cookieStore.get("font")?.value ?? "pixel";
 	return (
 		<html lang="en">
-			<body className={defaultFont.className}>
+			<body className={fonts[font as keyof typeof fonts].font.className}>
 				<header className="header">
 					<img src="/img/mewtilities.png" alt="Mewtilities Logo with a cat on top" />
 					<svg className="noise">
@@ -28,6 +33,7 @@ export default function RootLayout({
 						</filter>
 						<rect x="0" y="0" width="100%" height="100%" filter="url(#filter)" />
 					</svg>
+                    <FontSwitcher defaultFont={font} />
 				</header>
 				<nav className={styles.nav}>
 					<div className={styles.navEntry}>

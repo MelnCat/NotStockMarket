@@ -105,5 +105,6 @@ textarea {
 		z-index: 1;
 		mix-blend-mode: soft-light;
 		image-rendering: pixelated;
+		pointer-events: none;
 	}
 }

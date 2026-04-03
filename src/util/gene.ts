@@ -221,7 +221,7 @@ export const calculateUnknownGenes = (initialGuess: PartialCatGene, results: { r
 		? matchGene(
 				"spotting",
 				x => x.pattern!,
-				x => catPatterns[x[0] as keyof typeof catPatterns][x[1] as keyof typeof catPatterns],
+				x => catPatterns[x[0]][x[1]],
 				nonAlbino.filter(x => x.result.pattern && x.result.pattern !== "solid")
 		  )
 		: null;
