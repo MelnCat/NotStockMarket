@@ -21,6 +21,7 @@ const prisma = new PrismaClient({
 });
 
 const clothing = await prisma.item.findMany({ where: { category: "clothing" } });
+const custom = await prisma.item.findMany({ where: { category: { startsWith: "custom_clothing" } } });
 
 console.log("CAT")
 console.log(JSON.stringify(clothing.filter(x => !existsSync(`../pcefiles/images/clothing/c/${x.key}.png`)).map(x => x.key)))
@@ -28,3 +29,6 @@ console.log(JSON.stringify(clothing.filter(x => !existsSync(`../pcefiles/images/
 console.log("MERCAT")
 console.log(JSON.stringify(clothing.filter(x => !existsSync(`../pcefiles/images/clothing/m/${x.key}.png`)).map(x => x.key)))
 console.log(JSON.stringify(clothing.filter(x => !existsSync(`../pcefiles/images/clothing/m/${x.key}.png`)).map(x => x.id)))
+console.log("CUSTOM");
+console.log(JSON.stringify(custom.filter(x => !existsSync(`../pcefiles/images/customs/custom_${x.id}.png`)).map(x => x.key)))
+console.log(JSON.stringify(custom.filter(x => !existsSync(`../pcefiles/images/customs/custom_${x.id}.png`)).map(x => x.id)))
