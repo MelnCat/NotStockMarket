@@ -30,5 +30,5 @@ console.log("MERCAT")
 console.log(JSON.stringify(clothing.filter(x => !existsSync(`../pcefiles/images/clothing/m/${x.key}.png`)).map(x => x.key)))
 console.log(JSON.stringify(clothing.filter(x => !existsSync(`../pcefiles/images/clothing/m/${x.key}.png`)).map(x => x.id)))
 console.log("CUSTOM");
-console.log(JSON.stringify(custom.filter(x => !existsSync(`../pcefiles/images/customs/custom_${x.id}.png`)).map(x => x.key)))
-console.log(JSON.stringify(custom.filter(x => !existsSync(`../pcefiles/images/customs/custom_${x.id}.png`)).map(x => x.id)))
+console.log(JSON.stringify(custom.filter(x => !existsSync(x.image.replace("https://www.pixelcatsend.com/", "../pcefiles/"))).map(x => x.key)))
+console.log(JSON.stringify(custom.filter(x => !existsSync(x.image.replace("https://www.pixelcatsend.com/", "../pcefiles/"))).map(x => x.id)))
