@@ -22,13 +22,22 @@ const prisma = new PrismaClient({
 
 const clothing = await prisma.item.findMany({ where: { category: "clothing" } });
 const custom = await prisma.item.findMany({ where: { category: { startsWith: "custom_clothing" } } });
-
-console.log("CAT")
-console.log(JSON.stringify(clothing.filter(x => !existsSync(`../pcefiles/images/clothing/c/${x.key}.png`)).map(x => x.key)))
-console.log(JSON.stringify(clothing.filter(x => !existsSync(`../pcefiles/images/clothing/c/${x.key}.png`)).map(x => x.id)))
-console.log("MERCAT")
-console.log(JSON.stringify(clothing.filter(x => !existsSync(`../pcefiles/images/clothing/m/${x.key}.png`)).map(x => x.key)))
-console.log(JSON.stringify(clothing.filter(x => !existsSync(`../pcefiles/images/clothing/m/${x.key}.png`)).map(x => x.id)))
+const cMissing = clothing.filter(x => !existsSync(`../pcefiles/images/clothing/c/${x.key}.png`));
+const mMissing = clothing.filter(x => !existsSync(`../pcefiles/images/clothing/m/${x.key}.png`));
+const customMissing = custom.filter(x => !existsSync(x.image.replace("https://www.pixelcatsend.com/", "../pcefiles/")));
+console.log("CAT");
+console.log(JSON.stringify(cMissing.map(x => x.key)));
+console.log(JSON.stringify(cMissing.map(x => x.id)));
+console.log("MERCAT");
+console.log(JSON.stringify(mMissing.map(x => x.key)));
+console.log(JSON.stringify(mMissing.map(x => x.id)));
 console.log("CUSTOM");
-console.log(JSON.stringify(custom.filter(x => !existsSync(x.image.replace("https://www.pixelcatsend.com/", "../pcefiles/"))).map(x => x.key)))
-console.log(JSON.stringify(custom.filter(x => !existsSync(x.image.replace("https://www.pixelcatsend.com/", "../pcefiles/"))).map(x => x.id)))
+console.log(JSON.stringify(customMissing.map(x => x.key)));
+console.log(JSON.stringify(customMissing.map(x => x.id)));
+const links = [
+	...cMissing.map(x => `https://www.pixelcatsend.com/images/clothing/c/${x.key}.png`),
+	...mMissing.map(x => `https://www.pixelcatsend.com/images/clothing/c/${x.key}.png`),
+	...customMissing.map(x => x.image),
+];
+
+console.log(links.join("\n"));
