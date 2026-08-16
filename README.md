@@ -4,7 +4,7 @@ A website for [Pixel Cat's End](https://www.pixelcatsend.com/) utilities, such a
 
 ![image](https://github.com/user-attachments/assets/fd0f2699-8506-40b2-b9e2-b44f8d2b9c92)
 
-# All Rights Reserved
+# GPLv3
 
 # Self-Hosting
 
