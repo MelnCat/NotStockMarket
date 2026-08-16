@@ -5,7 +5,7 @@ export default async function Home() {
 	return (
 		<main className={styles.main}>
             <h1>Welcome to Mewtilities!</h1>
-            <p>you should play silksong</p>
+            <p>you should play deltarune chapter 6</p>
 			<Link href="/cat-editor">Cat Editor</Link>
 			<Link href="/gene-test">GATO</Link>
 		</main>

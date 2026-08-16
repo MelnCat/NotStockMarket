@@ -144,7 +144,7 @@ export const parseCatPage = (content: string, includePose: boolean = false): Res
 		const job = childNodes[1]?.textContent?.match(/[\w ]+/)?.[0]?.trim();
 		if (!job) return failure("Job missing or invalid");
 		builder.job = job;
-		const jobCol = jobLoop.querySelector(".bio-group-column");
+		const jobCol = jobLoop.querySelector(".bio-scroll");
 		if (!jobCol) return failure("Job column missing or invalid");
 		const jobXp = [...jobCol.childNodes]
 			.filter(x => x.nodeType === x.TEXT_NODE && x.textContent?.trim())
@@ -176,7 +176,7 @@ export const parseCatPage = (content: string, includePose: boolean = false): Res
 		const clazz = childNodes[1]?.textContent?.match(/[\w ]+/)?.[0]?.trim();
 		if (!clazz) return failure("Class missing or invalid");
 		builder.class = clazz;
-		const classCol = classLoop.querySelector(".bio-group-column");
+		const classCol = classLoop.querySelector(".bio-scroll");
 		if (!classCol) return failure("class column missing or invalid");
 		const classXp = [...classCol.childNodes]
 			.filter(x => x.nodeType === x.TEXT_NODE && x.textContent?.trim())
