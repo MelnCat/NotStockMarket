@@ -186,14 +186,15 @@ export const parseCatPage = (content: string, includePose: boolean = false): Res
 						x.textContent?.match(/(.+?) Level/)?.[1],
 						{
 							level: toNumberOrUndefined(x.textContent?.match(/Level (\d+)/)?.[1]),
-							xp: x.textContent?.includes("Maximum Level")
+							xp: x.textContent?.includes("Max")
 								? 0
 								: toNumberOrUndefined(x.textContent?.match(/(\d+)\/\d+ EXP/)?.[1]),
 						},
 					] as const
 			);
+            console.log(classXp)
 		if (classXp.some(x => x[0] === undefined || x[1].level === undefined || x[1].xp === undefined))
-			return failure("Job xp invalid");
+			return failure("Class xp invalid");
 		builder.classXp = Object.fromEntries(classXp);
 	} else {
 		builder.class = null;
